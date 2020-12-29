@@ -1,0 +1,353 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.22 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| customers          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sqlclass           |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.31 sec)
+
+mysql> use world;
+Database changed
+mysql> CREATE TABLE CUSTOMERS(
+    ->    ID   INT              NOT NULL,
+    ->    NAME VARCHAR (20)     NOT NULL,
+    ->    AGE  INT              NOT NULL,
+    ->    ADDRESS  CHAR (25) ,
+    ->    SALARY   DECIMAL (18, 2),
+    ->    PRIMARY KEY (ID)
+    -> );
+Query OK, 0 rows affected (2.83 sec)
+
+mysql> CREATE TABLE ORDERS (
+    ->    ID          INT        NOT NULL,
+    ->    DATE        DATETIME,
+    ->    CUSTOMER_ID INT references CUSTOMERS(ID),
+    ->    AMOUNT     double,
+    ->    PRIMARY KEY (ID)
+    -> );
+Query OK, 0 rows affected (1.86 sec)
+
+mysql> INSERT INTO customers(id,name,age,address,salary) values (101,'Karthik',3
+5,'Mysore',20000);
+Query OK, 1 row affected (0.35 sec)
+
+mysql> INSERT INTO customers(id,name,age,address,salary) values (102,'Anil',30,'
+Bangalore rural',25000);
+Query OK, 1 row affected (0.18 sec)
+
+mysql> INSERT INTO customers(id,name,age,address,salary) values (103,'Febin',39,
+'Bangalore urban',20000);
+Query OK, 1 row affected (0.15 sec)
+
+mysql> INSERT INTO customers(id,name,age,address,salary) values (104,'Arun',39,'
+Bangalore urban',28000);
+Query OK, 1 row affected (0.15 sec)
+
+mysql> INSERT INTO orders(id,date,customer_id,amount) values (1,'2020-12-10 6:24
+:08',101,30000);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO orders(id,date,customer_id,amount) values (2,'2020-11-8 2:34:
+15',102,20000);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO orders(id,date,customer_id,amount) values (3,'2020-11-10 10:3
+4:09',103,10000);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> INSERT INTO orders(id,date,customer_id,amount) values (4,'2020-10-10 12:3
+4:11',104,40000);
+Query OK, 1 row affected (0.25 sec)
+
+mysql> select *from customers;
++-----+---------+-----+-----------------+----------+
+| ID  | NAME    | AGE | ADDRESS         | SALARY   |
++-----+---------+-----+-----------------+----------+
+| 101 | Karthik |  35 | Mysore          | 20000.00 |
+| 102 | Anil    |  30 | Bangalore rural | 25000.00 |
+| 103 | Febin   |  39 | Bangalore urban | 20000.00 |
+| 104 | Arun    |  39 | Bangalore urban | 28000.00 |
++-----+---------+-----+-----------------+----------+
+4 rows in set (0.06 sec)
+
+mysql> select *from orders;
++----+---------------------+-------------+--------+
+| ID | DATE                | CUSTOMER_ID | AMOUNT |
++----+---------------------+-------------+--------+
+|  1 | 2020-12-10 06:24:08 |         101 |  30000 |
+|  2 | 2020-11-08 02:34:15 |         102 |  20000 |
+|  3 | 2020-11-10 10:34:09 |         103 |  10000 |
+|  4 | 2020-10-10 12:34:11 |         104 |  40000 |
++----+---------------------+-------------+--------+
+4 rows in set (0.04 sec)
+
+mysql>
+mysql>  update purchase
+    ->  set ID=6
+    ->  where customer_id=104
+    -> ;
+ERROR 1146 (42S02): Table 'world.purchase' doesn't exist
+mysql>
+mysql>  update purchase
+    ->  set ID=6
+    ->  where customer_id=104;
+ERROR 1146 (42S02): Table 'world.purchase' doesn't exist
+mysql> update orders
+    -> set id=6
+    -> where customer_id=104;
+Query OK, 1 row affected (0.20 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>
+mysql> select *from orders;
++----+---------------------+-------------+--------+
+| ID | DATE                | CUSTOMER_ID | AMOUNT |
++----+---------------------+-------------+--------+
+|  1 | 2020-12-10 06:24:08 |         101 |  30000 |
+|  2 | 2020-11-08 02:34:15 |         102 |  20000 |
+|  3 | 2020-11-10 10:34:09 |         103 |  10000 |
+|  6 | 2020-10-10 12:34:11 |         104 |  40000 |
++----+---------------------+-------------+--------+
+4 rows in set (0.05 sec)
+
+mysql> delete from customers where id=104;
+Query OK, 1 row affected (0.48 sec)
+
+mysql> select *from customers;
++-----+---------+-----+-----------------+----------+
+| ID  | NAME    | AGE | ADDRESS         | SALARY   |
++-----+---------+-----+-----------------+----------+
+| 101 | Karthik |  35 | Mysore          | 20000.00 |
+| 102 | Anil    |  30 | Bangalore rural | 25000.00 |
+| 103 | Febin   |  39 | Bangalore urban | 20000.00 |
++-----+---------+-----+-----------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> alter table customers
+    -> add date date not null
+    -> after age;
+Query OK, 0 rows affected (5.78 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> select *from customers;
++-----+---------+-----+------------+-----------------+----------+
+| ID  | NAME    | AGE | date       | ADDRESS         | SALARY   |
++-----+---------+-----+------------+-----------------+----------+
+| 101 | Karthik |  35 | 0000-00-00 | Mysore          | 20000.00 |
+| 102 | Anil    |  30 | 0000-00-00 | Bangalore rural | 25000.00 |
+| 103 | Febin   |  39 | 0000-00-00 | Bangalore urban | 20000.00 |
++-----+---------+-----+------------+-----------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> desc customers;
++---------+---------------+------+-----+---------+-------+
+| Field   | Type          | Null | Key | Default | Extra |
++---------+---------------+------+-----+---------+-------+
+| ID      | int           | NO   | PRI | NULL    |       |
+| NAME    | varchar(20)   | NO   |     | NULL    |       |
+| AGE     | int           | NO   |     | NULL    |       |
+| date    | date          | NO   |     | NULL    |       |
+| ADDRESS | char(25)      | YES  |     | NULL    |       |
+| SALARY  | decimal(18,2) | YES  |     | NULL    |       |
++---------+---------------+------+-----+---------+-------+
+6 rows in set (0.21 sec)
+
+mysql>
+mysql> alter table customers
+    -> modify address char(50);
+Query OK, 3 rows affected (1.88 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc customers;
++---------+---------------+------+-----+---------+-------+
+| Field   | Type          | Null | Key | Default | Extra |
++---------+---------------+------+-----+---------+-------+
+| ID      | int           | NO   | PRI | NULL    |       |
+| NAME    | varchar(20)   | NO   |     | NULL    |       |
+| AGE     | int           | NO   |     | NULL    |       |
+| date    | date          | NO   |     | NULL    |       |
+| address | char(50)      | YES  |     | NULL    |       |
+| SALARY  | decimal(18,2) | YES  |     | NULL    |       |
++---------+---------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> alter table customers
+    -> change column address location char(50)
+    -> after name;
+Query OK, 0 rows affected (2.38 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc customers;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| ID       | int           | NO   | PRI | NULL    |       |
+| NAME     | varchar(20)   | NO   |     | NULL    |       |
+| location | char(50)      | YES  |     | NULL    |       |
+| AGE      | int           | NO   |     | NULL    |       |
+| date     | date          | NO   |     | NULL    |       |
+| SALARY   | decimal(18,2) | YES  |     | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+6 rows in set (0.12 sec)
+
+mysql> alter table customers
+    -> drop column salary;
+Query OK, 0 rows affected (3.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc customers;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| ID       | int         | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| location | char(50)    | YES  |     | NULL    |       |
+| AGE      | int         | NO   |     | NULL    |       |
+| date     | date        | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table orders
+    -> rename to purchase;
+Query OK, 0 rows affected (0.63 sec)
+
+mysql> desc purchase;
++-------------+----------+------+-----+---------+-------+
+| Field       | Type     | Null | Key | Default | Extra |
++-------------+----------+------+-----+---------+-------+
+| ID          | int      | NO   | PRI | NULL    |       |
+| DATE        | datetime | YES  |     | NULL    |       |
+| CUSTOMER_ID | int      | YES  |     | NULL    |       |
+| AMOUNT      | double   | YES  |     | NULL    |       |
++-------------+----------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| customers          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sqlclass           |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.31 sec)
+
+mysql> use world;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_world |
++-----------------+
+| city            |
+| country         |
+| countrylanguage |
+| customers       |
+| purchase        |
++-----------------+
+5 rows in set (0.25 sec)
+
+mysql> create temporary table t4
+    -> select distinct id,name,age from customers;
+Query OK, 3 rows affected (0.28 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from t4;
++-----+---------+-----+
+| id  | name    | age |
++-----+---------+-----+
+| 101 | Karthik |  35 |
+| 102 | Anil    |  30 |
+| 103 | Febin   |  39 |
++-----+---------+-----+
+3 rows in set (0.00 sec)
+
+mysql> alter table t4
+    -> rename to t5;
+Query OK, 3 rows affected (0.06 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from t5;
++-----+---------+-----+
+| id  | name    | age |
++-----+---------+-----+
+| 101 | Karthik |  35 |
+| 102 | Anil    |  30 |
+| 103 | Febin   |  39 |
++-----+---------+-----+
+3 rows in set (0.00 sec)
+
+mysql> drop table t5;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> truncate table customers;
+Query OK, 0 rows affected (2.08 sec)
+
+mysql> select *from customers;
+Empty set (0.01 sec)
+
+mysql> desc customers;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| ID       | int         | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| location | char(50)    | YES  |     | NULL    |       |
+| AGE      | int         | NO   |     | NULL    |       |
+| date     | date        | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.10 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| customers          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sqlclass           |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> desc customers;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| ID       | int         | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| location | char(50)    | YES  |     | NULL    |       |
+| AGE      | int         | NO   |     | NULL    |       |
+| date     | date        | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+

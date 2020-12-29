@@ -1,0 +1,116 @@
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database practice;
+Query OK, 1 row affected (0.26 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| customers          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| practice           |
+| sakila             |
+| sqlclass           |
+| sys                |
+| world              |
++--------------------+
+9 rows in set (0.09 sec)
+
+mysql> use practice;
+Database changed
+mysql> CREATE TABLE Bonus (
+    ->  WORKER_REF_ID INT,
+    ->  BONUS_AMOUNT INT(10),
+    ->  BONUS_DATE DATETIME);
+Query OK, 0 rows affected, 1 warning (2.87 sec)
+
+mysql> INSERT INTO Bonus
+    ->  (WORKER_REF_ID, BONUS_AMOUNT, BONUS_DATE) VALUES
+    ->          (001, 5000, '16-02-20'),
+    ->          (002, 3000, '16-06-11'),
+    ->          (003, 4000, '16-02-20');
+Query OK, 3 rows affected (0.29 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select *from bonus;
++---------------+--------------+---------------------+
+| WORKER_REF_ID | BONUS_AMOUNT | BONUS_DATE          |
++---------------+--------------+---------------------+
+|             1 |         5000 | 2016-02-20 00:00:00 |
+|             2 |         3000 | 2016-06-11 00:00:00 |
+|             3 |         4000 | 2016-02-20 00:00:00 |
++---------------+--------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> create temporary table points
+    -> select distinct bonus_amount from bonus;
+Query OK, 3 rows affected (0.05 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++--------------------+
+| Tables_in_practice |
++--------------------+
+| bonus              |
+| worker             |
++--------------------+
+2 rows in set (0.11 sec)
+
+mysql> select *from points;
++--------------+
+| bonus_amount |
++--------------+
+|         5000 |
+|         3000 |
+|         4000 |
++--------------+
+3 rows in set (0.00 sec)
+
+mysql> alter table bonus
+    -> rename to points;
+Query OK, 0 rows affected (1.69 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_practice |
++--------------------+
+| points             |
+| worker             |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> drop temporary table points;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_practice |
++--------------------+
+| points             |
+| worker             |
++--------------------+
+2 rows in set (0.01 sec)
+
+mysql> truncate table points;
+Query OK, 0 rows affected (1.86 sec)
+
+mysql> select *from points;
+Empty set (0.01 sec)
+
+mysql> desc points;
++---------------+----------+------+-----+---------+-------+
+| Field         | Type     | Null | Key | Default | Extra |
++---------------+----------+------+-----+---------+-------+
+| WORKER_REF_ID | int      | YES  |     | NULL    |       |
+| BONUS_AMOUNT  | int      | YES  |     | NULL    |       |
+| BONUS_DATE    | datetime | YES  |     | NULL    |       |
++---------------+----------+------+-----+---------+-------+
+3 rows in set (0.05 sec)
+
